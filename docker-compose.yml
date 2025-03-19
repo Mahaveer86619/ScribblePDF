@@ -1,12 +1,11 @@
 services:
-  web:
+  scribblepdf:
+    container_name: scribblepdf
     build: .
     ports:
-      - "8000:8000"
+      - "5000:5000"
+    environment:
+      - GEMINI_API_KEY=AIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0A
+      - SECRET_KEY=AIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0AAIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0A
     volumes:
       - .:/app
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - MAX_UPLOAD_SIZE_MB=${MAX_UPLOAD_SIZE_MB}
-      - DEBUG=${DEBUG}
-    restart: unless-stopped

@@ -1,0 +1,25 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    {% if not pages %}
+    <form id="uploadForm" method="post" action="/upload" enctype="multipart/form-data">
+        <label for="file">Upload PDF:</label>
+        <input type="file" name="file" id="file" accept="application/pdf" required>
+        <button type="submit">Generate AI Notes</button>
+    </form>
+    {% else %}
+    <div id="viewer">
+        <img id="pageImage" src="{{ pages[0] }}" alt="Annotated PDF Page">
+        <div class="navigation">
+            <button id="prevBtn" disabled>Previous</button>
+            <span id="pageCounter">Page 1 of {{ pages|length }}</span>
+            <button id="nextBtn" {% if pages|length == 1 %}disabled{% endif %}>Next</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

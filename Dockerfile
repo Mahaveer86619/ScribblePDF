@@ -1,21 +1,24 @@
+# Dockerfile
 FROM python:latest
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set working directory
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    poppler-utils \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential libpoppler-cpp-dev pkg-config python3-dev
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy project files
+COPY . /app
 
-# Copy application code
-COPY . .
+# Install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Create necessary directories
-RUN mkdir -p uploads temp
+# Expose port 5000
+EXPOSE 5000
 
-# Run with uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the application with uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]
