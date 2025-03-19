@@ -1,25 +1,77 @@
-<!-- app/templates/index.html -->
-{% extends "base.html" %}
-{% block content %}
-<div class="container">
-    {% if error %}
-        <div class="error">{{ error }}</div>
-    {% endif %}
-    {% if not pages %}
-    <form id="uploadForm" method="post" action="/upload" enctype="multipart/form-data">
-        <label for="file">Upload PDF:</label>
-        <input type="file" name="file" id="file" accept="application/pdf" required>
-        <button type="submit">Generate AI Notes</button>
-    </form>
-    {% else %}
-    <div id="viewer">
-        <img id="pageImage" src="{{ pages[0] }}" alt="Annotated PDF Page">
-        <div class="navigation">
-            <button id="prevBtn" disabled>Previous</button>
-            <span id="pageCounter">Page 1 of {{ pages|length }}</span>
-            <button id="nextBtn" {% if pages|length == 1 %}disabled{% endif %}>Next</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScribblePDF - AI-Enhanced PDF Note Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ScribblePDF</h1>
+            <p class="subtitle">Transform PDFs into handwritten notes with AI</p>
+        </header>
+
+        <main>
+            <section id="upload-section">
+                <div class="upload-area" id="drop-area">
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <input type="file" id="file-input" name="file" accept=".pdf" hidden />
+                        <label for="file-input" class="file-label">
+                            <div class="upload-icon">
+                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="upload-text">
+                                <p>Drag and drop your PDF here</p>
+                                <p class="or-text">- OR -</p>
+                                <p class="browse-text">Browse Files</p>
+                            </div>
+                        </label>
+                    </form>
+                </div>
+                <div id="file-details" class="hidden">
+                    <p id="filename-display"></p>
+                    <p id="page-count-display"></p>
+                    <button id="generate-btn" class="primary-btn">Generate AI Notes</button>
+                </div>
+                <div id="progress-container" class="hidden">
+                    <div class="progress-bar">
+                        <div id="progress-fill"></div>
+                    </div>
+                    <p id="status-message">Processing...</p>
+                </div>
+            </section>
+
+            <section id="viewer-section" class="hidden">
+                <div class="controls">
+                    <button id="prev-btn" class="nav-btn">Previous</button>
+                    <span id="page-indicator">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                    <button id="next-btn" class="nav-btn">Next</button>
+                </div>
+                <div class="viewer">
+                    <img id="page-display" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="PDF Page" />
+                </div>
+            </section>
+        </main>
+
+        <div id="error-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Error</h2>
+                <p id="error-message"></p>
+            </div>
         </div>
+
+        <footer>
+            <p>&copy; 2025 ScribblePDF - AI-Enhanced PDF Note Generation</p>
+        </footer>
     </div>
-    {% endif %}
-</div>
-{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

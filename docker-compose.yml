@@ -1,11 +1,15 @@
 services:
   scribblepdf:
-    container_name: scribblepdf
     build: .
+    container_name: scribblepdf
     ports:
       - "5000:5000"
     environment:
-      - GEMINI_API_KEY=AIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0A
-      - SECRET_KEY=AIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0AAIzaSyC0-XP2icBGzvOY_JRzkuf2DV0wupBNu0A
+      - FLASK_APP=run.py
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-default-dev-key-please-change-in-production}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     volumes:
-      - .:/app
+      - ./app/static/uploads:/app/app/static/uploads
+      - ./app/static/processed:/app/app/static/processed
+    restart: unless-stopped
